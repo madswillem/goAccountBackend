@@ -2,7 +2,7 @@ package initializers
 
 import (
 	"os"
-
+	
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,6 +15,6 @@ func ConnectToDB() {
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		panic("Error " + err.Error())
+		panic("Error " + err.Error() + DB.Name())
 	}
 }
