@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"lionauth.ml/goAuth/initializers"
 	"github.com/gin-gonic/gin"
 )
@@ -19,5 +18,4 @@ func main() {
 		})
 	})
 	r.Run()
-	fmt.Println("Hello World")
 }

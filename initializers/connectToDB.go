@@ -1,10 +1,12 @@
 package initializers
 
 import (
+	"fmt"
 	"os"
-	
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"lionauth.ml/goAuth/models"
 )
 
 var DB *gorm.DB
@@ -14,7 +16,11 @@ func ConnectToDB() {
 	dsn := os.Getenv("DB")
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil {
-		panic("Error " + err.Error() + DB.Name())
+	if err != nil || DB == nil {
+		panic("Error ")
 	}
+
+	DB.AutoMigrate(&models.User{})
+
+	fmt.Println(DB)
 }
