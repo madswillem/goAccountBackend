@@ -110,7 +110,11 @@ func Login(c *gin.Context)  {
 
 	//Generate jwt
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user,
+		"id": user.ID,
+		"email": user.Email,
+		"created_at": user.CreatedAt,
+		"deleted_at": user.DeletedAt,
+		"updated_at": user.UpdatedAt,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
@@ -130,5 +134,13 @@ func Login(c *gin.Context)  {
 	//Return JWT
 	c.JSON(http.StatusAccepted, gin.H{
 		"jwt": tokenString,
+	})
+}
+
+func Validate(c *gin.Context) {
+	user, _ := c.Get("user")
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": user,
 	})
 }
