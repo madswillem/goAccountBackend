@@ -1,8 +1,9 @@
 package main
 
 import (
-	"lionauth.ml/goAuth/initializers"
 	"github.com/gin-gonic/gin"
+	"lionauth.ml/goAuth/controlers"
+	"lionauth.ml/goAuth/initializers"
 )
 
 func init()  {
@@ -12,10 +13,7 @@ func init()  {
 
 func main() {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	r.POST("/signup", controlers.Signup)
+	r.POST("/login", controlers.Login)
 	r.Run()
 }
