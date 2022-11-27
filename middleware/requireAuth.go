@@ -15,8 +15,9 @@ func RequireAuth(c *gin.Context) {
 	//Get Cookie
 	tokenString, err := c.Cookie("Auth")
 
-	if err != nil {
+	if err != nil|| tokenString == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
+		return
 	}
 
 	//Decode/Validate jwt
@@ -36,6 +37,7 @@ func RequireAuth(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"err": "token is expired",
 			})
+			return
 		}
 
 		//Bind token Values to usermodel
