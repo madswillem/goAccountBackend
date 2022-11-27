@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,8 +13,38 @@ import (
 )
 
 func RequireAuth(c *gin.Context) {
-	//Get Cookie
+	//Get Cookie || Get bearer
+
+	//Cookie;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	tokenString, err := c.Cookie("Auth")
+
+	//Bearer;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	if tokenString == "" {
+		authHeader := c.GetHeader("Authorization")
+
+		// Authorization header is missing in HTTP request
+		if authHeader == "" {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		authTokens := strings.Split(authHeader, " ")
+
+		// The value of authorization header is invalid
+		// It should start with "Bearer ", then the token value
+		if len(authTokens) != 2 || authTokens[0] != "Bearer" {
+			if len(authTokens) != 2 {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+					"error": "No real auth Header",
+				})
+			} else {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+					"error": "Wrong Auuth Header",
+				})
+			}
+			return
+		}
+	}
 
 	if err != nil|| tokenString == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
