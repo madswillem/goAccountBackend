@@ -41,10 +41,34 @@ func RequireAuth(c *gin.Context) {
 		//Bind token Values to usermodel
 		var user models.User
 
-		var id uint = claims["id"].(uint)
-
-		user.ID = id
+		user.ID = uint(claims["id"].(float64))
 		user.Email = claims["email"].(string)
+
+		//CreatedAt
+		fmt.Println(claims["created_at"].(string))
+		date, err := time.Parse("2006-01-02T15:04:05.999999999+01:00", claims["created_at"].(string))
+  
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(date)
+
+		user.CreatedAt = date
+
+		//UpdatedAt
+		fmt.Println(claims["created_at"].(string))
+		date, err = time.Parse("2006-01-02T15:04:05.999999999+01:00", claims["updated_at"].(string))
+  
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(date)
+
+		user.UpdatedAt = date
 
 		//Atach to req
 		c.Set("user", user)
