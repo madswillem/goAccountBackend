@@ -19,12 +19,14 @@ func RequireAuth(c *gin.Context) {
 	tokenString, err := c.Cookie("Auth")
 
 	//Bearer;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	if tokenString == "" {
+	if err != nil || tokenString == "" {
 		authHeader := c.GetHeader("Authorization")
 
 		// Authorization header is missing in HTTP request
 		if authHeader == "" {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "No Authheader" + authHeader,
+			})
 			return
 		}
 
@@ -34,20 +36,25 @@ func RequireAuth(c *gin.Context) {
 		// It should start with "Bearer ", then the token value
 		if len(authTokens) != 2 || authTokens[0] != "Bearer" {
 			if len(authTokens) != 2 {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				c.JSON(http.StatusUnauthorized, gin.H{
 					"error": "No real auth Header",
 				})
+				return
 			} else {
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 					"error": "Wrong Auuth Header",
 				})
+				return
 			}
-			return
 		}
+
+		tokenString = authTokens[1]
 	}
 
-	if err != nil|| tokenString == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
+	if tokenString == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "No auth " + err.Error() + tokenString,
+		})
 		return
 	}
 
