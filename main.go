@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"lionauth.ml/goAuth/controlers"
 	"lionauth.ml/goAuth/initializers"
 	"lionauth.ml/goAuth/middleware"
+	"lionauth.ml/goAuth/controllers"
 )
 
 func init()  {
@@ -14,8 +14,8 @@ func init()  {
 
 func main() {
 	r := gin.Default()
-	r.POST("/signup", controlers.Signup)
-	r.POST("/login", controlers.Login)
-	r.GET("/validate", middleware.RequireAuth,  controlers.Validate)
+	r.POST("/signup", controllers.Signup)
+	r.POST("/login", controllers.Login)
+	r.GET("/validate", middleware.RequireAuth,  controllers.Validate)
 	r.Run()
 }
